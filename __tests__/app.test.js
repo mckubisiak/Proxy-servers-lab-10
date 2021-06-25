@@ -2,22 +2,11 @@ require('dotenv').config();
 const { execSync } = require('child_process');
 const fakeRequest = require('supertest');
 const app = require('../lib/app');
-const { wrangleLocationResponse, wrangleWeatherResponse  } = require('../lib/wrangledata');
+const { wrangleLocationResponse } = require('../lib/wrangledata');
 
 
-beforeAll(async () => {
-  execSync('npm run setup-db');
-  
-  const signInData = await fakeRequest(app)
-    .post('/auth/signup')
-    .send({
-      email: 'jon@user.com',
-      password: '1234'
-    });
-      
-      token = signInData.body.token; // eslint-disable-line
-}, 10000);
-  
+describe('app routes', () => {
+  describe('routes', () => {
 
 test('returns location data', async() => {
 
@@ -221,20 +210,31 @@ test('returns location data', async() => {
 test('returns weather data', async() => {
 
   const expectation = [
-    {
-      'forecast': 'Partly cloudy until afternoon.',
-      'time': 'Tuesday, June 29, 2021'
-    },
-    {
-      'forecast': 'Mostly cloudy in the morning.',
-      'time': 'Wednesday, June 30, 2021'
-    },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) },
+    { forecast: expect.any(String), time: expect.any(String) }
   ];
   
-  const data = await fakeRequest(app).get('/weather?latitude=47.6038321&longitude=-122.3300624').expect('Content-Type, /json/').expect(200);
+  const data = await fakeRequest(app)
+  .get('/weather?latitude=47.6038321&longitude=-122.3300624')
+  .expect('Content-Type', /json/)
+  .expect(200);
 
-  const actual = wrangleWeatherResponse(data);
     
-  expect(actual).toEqual(expectation);
+  expect(data.body).toEqual(expectation);
 });
-
+});
+});
