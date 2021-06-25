@@ -1,39 +1,21 @@
+const { wrangleLocationResponse } = require('../lib/wrangledata.js');
+
 require('dotenv').config();
 
-const { execSync } = require('child_process');
 
-const fakeRequest = require('supertest');
-const app = require('../lib/app');
-const { wrangleLocationResponse } = require('../lib/wrangledata');
 
-describe('app routes', () => {
- 
+describe('wrangle functions', () => {
   
-  beforeAll(async () => {
-    execSync('npm run setup-db');
-  
-    const signInData = await fakeRequest(app)
-      .post('/auth/signup')
-      .send({
-        email: 'jon@user.com',
-        password: '1234'
-      });
-      
-      token = signInData.body.token; // eslint-disable-line
-  }, 10000);
-  
-
-  test('returns location data', async() => {
+  test('returns location data filtered', async() => {
 
     const expectation = 
       {
         'formatted_query': 'Seattle, King County, Washington, USA',
         'latitude': '47.6038321',
-        'longitude': '-122.3300624'
-      }
-    ;
+        'longitude': '-122.3300624',
+      };
 
-    const response =  [
+    const response = [
       {
         'place_id': '235549103',
         'licence': 'https://locationiq.com/attribution',
@@ -217,9 +199,9 @@ describe('app routes', () => {
       }
     ];
 
-    const actual = wrangleLocationResponse(response);
-      
-    expect(actual).toEqual(expectation);
-  });
-});
+    const actaul = wrangleLocationResponse(response);
 
+    expect(actaul).toEqual(expectation);
+  });
+
+});
